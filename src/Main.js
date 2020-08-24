@@ -13,13 +13,18 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import StateManager from "react-select";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   card: {
-    maxWidth: 500,
+    maxWidth: 600,
     margin: "auto",
     marginTop: 30,
   },
@@ -36,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 250,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -112,9 +117,16 @@ export default function Main() {
   const [shippingPrice, setShippingPrice] = React.useState(0);
   const [purger, setPurger] = React.useState("");
   const [purgerPrice, setPurgerPrice] = React.useState(0);
-  const [adaptors, setAdaptors] = React.useState("");
-  const [adaptorsPrice, setAdaptorsPrice] = React.useState(0);
+  const [adaptersPrice, setAdaptersPrice] = React.useState(0);
   const [total, setTotal] = React.useState(0);
+  const [adapters, setAdapters] = React.useState({
+    EuroStyle: false,
+    Forklift: false,
+    Hanson: false,
+    POL: false,
+    RV: false,
+    HighCapacity: false,
+  });
 
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -236,6 +248,75 @@ export default function Main() {
     }
   };
 
+  const [EuroStylePrice, setEuroStylePrice] = React.useState(0);
+  const [ForkliftPrice, setForkliftPrice] = React.useState(0);
+  const [HansonPrice, setHansonPrice] = React.useState(0);
+  const [POLPrice, setPOLPrice] = React.useState(0);
+  const [RVPrice, setRVPrice] = React.useState(0);
+  const [HighCapacityPrice, setHighCapacityPrice] = React.useState(0);
+
+  const handleEuroStyle = (event) => {
+    setAdapters({ ...adapters, [event.target.name]: event.target.checked });
+    console.log([event.target.name], event.target.checked);
+    if (event.target.name === "EuroStyle" && event.target.checked == true) {
+      setEuroStylePrice(115.68);
+    } else {
+      setEuroStylePrice(0);
+    }
+  };
+
+  const handleForklift = (event) => {
+    setAdapters({ ...adapters, [event.target.name]: event.target.checked });
+    console.log([event.target.name], event.target.checked);
+    if (event.target.name === "Forklift" && event.target.checked == true) {
+      setForkliftPrice(68.98);
+    } else {
+      setForkliftPrice(0);
+    }
+  };
+
+  const handleHanson = (event) => {
+    setAdapters({ ...adapters, [event.target.name]: event.target.checked });
+    console.log([event.target.name], event.target.checked);
+    if (event.target.name === "Hanson" && event.target.checked == true) {
+      setHansonPrice(15);
+    } else {
+      setHansonPrice(0);
+    }
+  };
+
+  const handlePOL = (event) => {
+    setAdapters({ ...adapters, [event.target.name]: event.target.checked });
+    console.log([event.target.name], event.target.checked);
+    if (event.target.name === "POL" && event.target.checked == true) {
+      setPOLPrice(61.97);
+    } else {
+      setPOLPrice(0);
+    }
+  };
+
+  const handleRV = (event) => {
+    setAdapters({ ...adapters, [event.target.name]: event.target.checked });
+    console.log([event.target.name], event.target.checked);
+    if (event.target.name === "RV" && event.target.checked == true) {
+      setRVPrice(36.94);
+    } else {
+      setRVPrice(0);
+    }
+  };
+
+  const handleHighCapacity = (event) => {
+    setAdapters({ ...adapters, [event.target.name]: event.target.checked });
+    console.log([event.target.name], event.target.checked);
+    if (event.target.name === "HighCapacity" && event.target.checked == true) {
+      setHighCapacityPrice(131.84);
+    } else {
+      setHighCapacityPrice(0);
+    }
+  };
+
+  const { EuroStyle, Forklift, Hanson, POL, RV, HighCapacity } = adapters;
+
   const calculateTotal = () => {
     setTotal(
       dispenserPrice +
@@ -246,9 +327,15 @@ export default function Main() {
         EStopPrice +
         scalePrice +
         shippingPrice +
-        purgerPrice
+        purgerPrice +
+        EuroStylePrice +
+        ForkliftPrice +
+        HansonPrice +
+        POLPrice +
+        RVPrice +
+        HighCapacityPrice
     );
-    console.log("total", dispenserPrice + tankPrice);
+    // console.log("total", dispenserPrice + tankPrice);
   };
 
   return (
@@ -422,6 +509,63 @@ export default function Main() {
                 Cylinder Purge System
               </MenuItem>
             </Select>
+          </FormControl>
+          <br />
+          <FormControl component="fieldset" className={classes.formControl}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={EuroStyle}
+                    onChange={handleEuroStyle}
+                    name="EuroStyle"
+                  />
+                }
+                label="Euro Style Staubli Adapter"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={Forklift}
+                    onChange={handleForklift}
+                    name="Forklift"
+                  />
+                }
+                label="Forklift Adapter"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={Hanson}
+                    onChange={handleHanson}
+                    name="Hanson"
+                  />
+                }
+                label="Hanson Adapter"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={POL} onChange={handlePOL} name="POL" />
+                }
+                label="POL Adapter"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={RV} onChange={handleRV} name="RV" />
+                }
+                label="RV Filling Adapter"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={HighCapacity}
+                    onChange={handleHighCapacity}
+                    name="HighCapacity"
+                  />
+                }
+                label="High Capacity Filling Adapter"
+              />
+            </FormGroup>
           </FormControl>
         </CardContent>
         <CardActions>
