@@ -1,11 +1,22 @@
 import React from "react";
-import logo from "./logo.svg";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Main from "./Main";
 import "./App.css";
 
 function App() {
-  return <Main />;
+  return (
+    <Router>
+      <Switch>
+        <Route path="/">
+          <Main />
+        </Route>
+        {/* <Route path="/generate-quote">
+          <QuotePage />
+        </Route> */}
+      </Switch>
+    </Router>
+  );
 }
 
 export default App;

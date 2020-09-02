@@ -1,5 +1,15 @@
-import React, { Component } from "react";
-// import Select from "react-select";
+import React from "react";
+import Pdf from "react-to-pdf";
+import {
+  PDFViewer,
+  PDFDownloadLink,
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+} from "@react-pdf/renderer";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
@@ -10,23 +20,29 @@ import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import StateManager from "react-select";
+import Grid from "@material-ui/core/Grid";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import TextField from "@material-ui/core/TextField";
+
+import Logo from "./Website Header Logo.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   card: {
-    maxWidth: 600,
+    maxWidth: 900,
+    flexGrow: 1,
     margin: "auto",
     marginTop: 30,
+    marginBottom: 30,
   },
   title: {
     margin: "auto",
@@ -46,61 +62,50 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  quoteButton: {
+    margin: 8,
+  },
+  logo: {
+    display: "block",
+    maxWidth: 200,
+    margin: "auto",
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+  inputs: {},
 }));
 
-const dispensers = [
-  {
-    type1: "010 disp",
-    price: 15100,
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: "row",
+    backgroundColor: "#E4E4E4",
   },
-  {
-    type2: "001 disp",
-    price: 14260,
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1,
   },
-  {
-    type3: "001 auto",
-    price: 15240,
+  title: {
+    textAlign: "center",
+    marginTop: 40,
+    fontSize: 30,
   },
-  {
-    type4: "AGE disp",
-    price: 19350,
-  },
-  {
-    type5: "AGC01 auto",
-    price: 22080,
-  },
-];
-const tanks = [
-  {
-    type1: "no tank",
-    price: -3510,
-  },
-  {
-    type2: "Customer Supplied",
-    price: -2410,
-  },
-  {
-    type3: "500 Gallon",
-    price: -691,
-  },
-  {
-    type4: "1000 Gallon",
-    price: 0,
-  },
-  {
-    type5: "Vertical 1000 Gallon",
-    price: 7240,
-  },
-  {
-    type6: "1990 Gallon",
-    price: 6230,
-  },
-];
+});
 
 export default function Main() {
   const classes = useStyles();
   const [dispenser, setDispenser] = React.useState("");
   const [dispenserPrice, setDispenserPrice] = React.useState(0);
+  const [selectedDispenser, setSelectedDispenser] = React.useState("None");
   const [tank, setTank] = React.useState("");
   const [tankPrice, setTankPrice] = React.useState(0);
   const [pump, setPump] = React.useState("");
@@ -117,7 +122,6 @@ export default function Main() {
   const [shippingPrice, setShippingPrice] = React.useState(0);
   const [purger, setPurger] = React.useState("");
   const [purgerPrice, setPurgerPrice] = React.useState(0);
-  const [adaptersPrice, setAdaptersPrice] = React.useState(0);
   const [total, setTotal] = React.useState(0);
   const [adapters, setAdapters] = React.useState({
     EuroStyle: false,
@@ -127,6 +131,136 @@ export default function Main() {
     RV: false,
     HighCapacity: false,
   });
+  const [open, setOpen] = React.useState(false);
+  const [showInputs, setShowInputs] = React.useState(false);
+  const [quoteNumber, setQuoteNumber] = React.useState(" ");
+
+  const inputValues = {
+    quoteNum: "",
+    companyName: "",
+    customerName: "",
+    yourName: "",
+  };
+
+  const handleOpen = () => {
+    setQuoteNumber(inputValues.quoteNum);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const onChangeQuoteNum = (event) => {
+    inputValues.quoteNum = event;
+  };
+
+  const MyDocument = () => (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={{ marginTop: 40 }}>
+          <Text style={{ textAlign: "center", fontSize: 30 }}>
+            Intermountain Truck Rebuilders
+          </Text>
+          <Text style={{ textAlign: "center", fontSize: 16, marginTop: 10 }}>
+            2927 S American Way Ogden, UT 84401
+          </Text>
+          <Text style={{ textAlign: "center", fontSize: 16, marginTop: 10 }}>
+            800-950-9261
+          </Text>
+          <Text>Quote # {quoteNumber}</Text>
+          <Text>ATTN: </Text>
+          <Text>Date: </Text>
+          <Text>{selectedDispenser}</Text>
+        </View>
+      </Page>
+    </Document>
+  );
+
+  const CreateQuote = (props) => {
+    console.log("CreateQuoteRendered");
+    return (
+      <div style={{ margin: 8 }}>
+        <Typography style={{ fontSize: 20, margin: 20 }}>
+          To create a PDF enter Quote #, Comapny Name and Customer Name then
+          click GENERATE
+        </Typography>
+        <form className={classes.inputs} noValidate autoComplete="off">
+          <Grid container spacing={2} direction="row" justify="center">
+            <Grid item xs={6} sm={3}>
+              <TextField
+                id="outlined-basic"
+                label="Quote #"
+                variant="outlined"
+                onChange={(event) => onChangeQuoteNum(event.target.value)}
+                defaultValue={inputValues.quoteNum}
+              />
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <TextField
+                id="outlined-basic"
+                label="Company Name"
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <TextField
+                id="outlined-basic"
+                label="Customer Name"
+                variant="outlined"
+              />
+            </Grid>{" "}
+            <Grid item xs={6} sm={3}>
+              <TextField
+                id="outlined-basic"
+                label="Your Name"
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+        </form>
+        <Button
+          style={{ marginBottom: 10, marginTop: 30 }}
+          variant="contained"
+          color="secondary"
+          type="button"
+          onClick={handleOpen}
+        >
+          Generate
+        </Button>
+        <button onClick={() => console.log("test", inputValues.quoteNum)}>
+          Test
+        </button>
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          className={classes.modal}
+          open={open}
+          onClose={handleClose}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={open}>
+            <div className={classes.paper}>
+              <h2 id="transition-modal-title">Dispenser Quote</h2>
+              <p id="transition-modal-description">
+                If everything looks good you can download or print the quote. If
+                not{" "}
+                <button onClick={handleClose}>change the quote details</button>
+              </p>
+
+              <PDFViewer width={800} height={800}>
+                <MyDocument />
+              </PDFViewer>
+            </div>
+          </Fade>
+        </Modal>
+      </div>
+    );
+  };
 
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -137,8 +271,10 @@ export default function Main() {
     setDispenser(event.target.value);
     if (event.target.value === "010 Dispenser") {
       setDispenserPrice(15100);
+      setSelectedDispenser("010 Dispenser");
     } else if (event.target.value === "001 Dispenser") {
       setDispenserPrice(14260);
+      setSelectedDispenser("001 Dispenser");
     } else if (event.target.value === "001 Auto-gas") {
       setDispenserPrice(15240);
     } else if (event.target.value === "AGE Auto-gas") {
@@ -258,7 +394,7 @@ export default function Main() {
   const handleEuroStyle = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
     console.log([event.target.name], event.target.checked);
-    if (event.target.name === "EuroStyle" && event.target.checked == true) {
+    if (event.target.name === "EuroStyle" && event.target.checked === true) {
       setEuroStylePrice(115.68);
     } else {
       setEuroStylePrice(0);
@@ -268,7 +404,7 @@ export default function Main() {
   const handleForklift = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
     console.log([event.target.name], event.target.checked);
-    if (event.target.name === "Forklift" && event.target.checked == true) {
+    if (event.target.name === "Forklift" && event.target.checked === true) {
       setForkliftPrice(68.98);
     } else {
       setForkliftPrice(0);
@@ -278,7 +414,7 @@ export default function Main() {
   const handleHanson = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
     console.log([event.target.name], event.target.checked);
-    if (event.target.name === "Hanson" && event.target.checked == true) {
+    if (event.target.name === "Hanson" && event.target.checked === true) {
       setHansonPrice(15);
     } else {
       setHansonPrice(0);
@@ -288,7 +424,7 @@ export default function Main() {
   const handlePOL = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
     console.log([event.target.name], event.target.checked);
-    if (event.target.name === "POL" && event.target.checked == true) {
+    if (event.target.name === "POL" && event.target.checked === true) {
       setPOLPrice(61.97);
     } else {
       setPOLPrice(0);
@@ -298,7 +434,7 @@ export default function Main() {
   const handleRV = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
     console.log([event.target.name], event.target.checked);
-    if (event.target.name === "RV" && event.target.checked == true) {
+    if (event.target.name === "RV" && event.target.checked === true) {
       setRVPrice(36.94);
     } else {
       setRVPrice(0);
@@ -308,7 +444,7 @@ export default function Main() {
   const handleHighCapacity = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
     console.log([event.target.name], event.target.checked);
-    if (event.target.name === "HighCapacity" && event.target.checked == true) {
+    if (event.target.name === "HighCapacity" && event.target.checked === true) {
       setHighCapacityPrice(131.84);
     } else {
       setHighCapacityPrice(0);
@@ -338,24 +474,19 @@ export default function Main() {
     // console.log("total", dispenserPrice + tankPrice);
   };
 
+  // const ref = React.createRef();
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Dispenser Quote Calculator
+            Dispenser Quote Builder
           </Typography>
         </Toolbar>
       </AppBar>
       <Card className={classes.card}>
         <CardContent>
-          {/* <Typography
-            className={classes.title}
-            color="textSecondary"
-            gutterBottom
-          >
-            Select a dispenser
-          </Typography> */}
           <FormControl variant="filled" className={classes.formControl}>
             <InputLabel id="demo-simple-select-filled-label">
               Dispenser
@@ -569,12 +700,105 @@ export default function Main() {
           </FormControl>
         </CardContent>
         <CardActions>
-          <Button color="primary" onClick={calculateTotal} size="small">
-            Calculate
-          </Button>
-          <div>Total: {formatter.format(total)}</div>
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={calculateTotal}
+                size="small"
+              >
+                Calculate
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <div>Total: {formatter.format(total)}</div>
+            </Grid>
+          </Grid>
         </CardActions>
+        <div style={{ margin: 8 }}>
+          <Typography style={{ fontSize: 20, margin: 20 }}>
+            To create a PDF enter Quote #, Comapny Name and Customer Name then
+            click GENERATE
+          </Typography>
+          <form className={classes.inputs} noValidate autoComplete="off">
+            <Grid container spacing={2} direction="row" justify="center">
+              <Grid item xs={6} sm={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="Quote #"
+                  variant="outlined"
+                  onChange={(event) => setQuoteNumber(event.target.value)}
+                  defaultValue={quoteNumber}
+                />
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="Company Name"
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="Customer Name"
+                  variant="outlined"
+                />
+              </Grid>{" "}
+              <Grid item xs={6} sm={3}>
+                <TextField
+                  id="outlined-basic"
+                  label="Your Name"
+                  variant="outlined"
+                />
+              </Grid>
+            </Grid>
+          </form>
+          <Button
+            style={{ marginBottom: 10, marginTop: 30 }}
+            variant="contained"
+            color="secondary"
+            type="button"
+            onClick={handleOpen}
+          >
+            Generate
+          </Button>
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={open}>
+              <div className={classes.paper}>
+                <h2 id="transition-modal-title">Dispenser Quote</h2>
+                <p id="transition-modal-description">
+                  If everything looks good you can download or print the quote.
+                  If not{" "}
+                  <button onClick={handleClose}>
+                    change the quote details
+                  </button>
+                </p>
+
+                <PDFViewer width={800} height={800}>
+                  <MyDocument />
+                </PDFViewer>
+              </div>
+            </Fade>
+          </Modal>
+        </div>
       </Card>
+      {/* <Card className={classes.card}>
+    
+        <CreateQuote />
+      </Card> */}
     </div>
   );
 }
