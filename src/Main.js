@@ -1,14 +1,5 @@
 import React from "react";
-import Pdf from "react-to-pdf";
-import {
-  PDFViewer,
-  PDFDownloadLink,
-  Page,
-  Text,
-  View,
-  Document,
-  StyleSheet,
-} from "@react-pdf/renderer";
+import PdfModal from "./PdfModal";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -26,12 +17,10 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
+
 import TextField from "@material-ui/core/TextField";
 
-import Logo from "./Website Header Logo.png";
+// import Logo from "./Website Header Logo.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,28 +73,32 @@ const useStyles = makeStyles((theme) => ({
   inputs: {},
 }));
 
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: "row",
-    backgroundColor: "#E4E4E4",
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-  title: {
-    textAlign: "center",
-    marginTop: 40,
-    fontSize: 30,
-  },
-});
-
 export default function Main() {
   const classes = useStyles();
   const [dispenser, setDispenser] = React.useState("");
   const [dispenserPrice, setDispenserPrice] = React.useState(0);
-  const [selectedDispenser, setSelectedDispenser] = React.useState("None");
+  const [selectedOptions, setSelectedOptions] = React.useState({
+    dispenser: "",
+    tank: "",
+    pump: "",
+    meter: "",
+    power: "",
+    eStop: "",
+    scale: "",
+    shipping: "",
+    purger: "",
+    quoteNum: "",
+    companyName: "",
+    customerName: "",
+    yourName: "",
+    euroStyle: "",
+    forklift: "",
+    hanson: "",
+    pol: "",
+    rv: "",
+    highCapacity: "",
+  });
+
   const [tank, setTank] = React.useState("");
   const [tankPrice, setTankPrice] = React.useState(0);
   const [pump, setPump] = React.useState("");
@@ -131,136 +124,6 @@ export default function Main() {
     RV: false,
     HighCapacity: false,
   });
-  const [open, setOpen] = React.useState(false);
-  const [showInputs, setShowInputs] = React.useState(false);
-  const [quoteNumber, setQuoteNumber] = React.useState(" ");
-
-  const inputValues = {
-    quoteNum: "",
-    companyName: "",
-    customerName: "",
-    yourName: "",
-  };
-
-  const handleOpen = () => {
-    setQuoteNumber(inputValues.quoteNum);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const onChangeQuoteNum = (event) => {
-    inputValues.quoteNum = event;
-  };
-
-  const MyDocument = () => (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={{ marginTop: 40 }}>
-          <Text style={{ textAlign: "center", fontSize: 30 }}>
-            Intermountain Truck Rebuilders
-          </Text>
-          <Text style={{ textAlign: "center", fontSize: 16, marginTop: 10 }}>
-            2927 S American Way Ogden, UT 84401
-          </Text>
-          <Text style={{ textAlign: "center", fontSize: 16, marginTop: 10 }}>
-            800-950-9261
-          </Text>
-          <Text>Quote # {quoteNumber}</Text>
-          <Text>ATTN: </Text>
-          <Text>Date: </Text>
-          <Text>{selectedDispenser}</Text>
-        </View>
-      </Page>
-    </Document>
-  );
-
-  const CreateQuote = (props) => {
-    console.log("CreateQuoteRendered");
-    return (
-      <div style={{ margin: 8 }}>
-        <Typography style={{ fontSize: 20, margin: 20 }}>
-          To create a PDF enter Quote #, Comapny Name and Customer Name then
-          click GENERATE
-        </Typography>
-        <form className={classes.inputs} noValidate autoComplete="off">
-          <Grid container spacing={2} direction="row" justify="center">
-            <Grid item xs={6} sm={3}>
-              <TextField
-                id="outlined-basic"
-                label="Quote #"
-                variant="outlined"
-                onChange={(event) => onChangeQuoteNum(event.target.value)}
-                defaultValue={inputValues.quoteNum}
-              />
-            </Grid>
-            <Grid item xs={6} sm={3}>
-              <TextField
-                id="outlined-basic"
-                label="Company Name"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={6} sm={3}>
-              <TextField
-                id="outlined-basic"
-                label="Customer Name"
-                variant="outlined"
-              />
-            </Grid>{" "}
-            <Grid item xs={6} sm={3}>
-              <TextField
-                id="outlined-basic"
-                label="Your Name"
-                variant="outlined"
-              />
-            </Grid>
-          </Grid>
-        </form>
-        <Button
-          style={{ marginBottom: 10, marginTop: 30 }}
-          variant="contained"
-          color="secondary"
-          type="button"
-          onClick={handleOpen}
-        >
-          Generate
-        </Button>
-        <button onClick={() => console.log("test", inputValues.quoteNum)}>
-          Test
-        </button>
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          className={classes.modal}
-          open={open}
-          onClose={handleClose}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500,
-          }}
-        >
-          <Fade in={open}>
-            <div className={classes.paper}>
-              <h2 id="transition-modal-title">Dispenser Quote</h2>
-              <p id="transition-modal-description">
-                If everything looks good you can download or print the quote. If
-                not{" "}
-                <button onClick={handleClose}>change the quote details</button>
-              </p>
-
-              <PDFViewer width={800} height={800}>
-                <MyDocument />
-              </PDFViewer>
-            </div>
-          </Fade>
-        </Modal>
-      </div>
-    );
-  };
 
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -269,119 +132,126 @@ export default function Main() {
 
   const handleDispenser = (event) => {
     setDispenser(event.target.value);
-    if (event.target.value === "010 Dispenser") {
+    if (event.target.value === "- 010 Dispenser Cabinet") {
       setDispenserPrice(15100);
-      setSelectedDispenser("010 Dispenser");
-    } else if (event.target.value === "001 Dispenser") {
+    } else if (event.target.value === "- 001 Dispenser Cabinet") {
       setDispenserPrice(14260);
-      setSelectedDispenser("001 Dispenser");
-    } else if (event.target.value === "001 Auto-gas") {
+    } else if (event.target.value === "- 001 Auto-gas Cabinet") {
       setDispenserPrice(15240);
-    } else if (event.target.value === "AGE Auto-gas") {
+    } else if (event.target.value === "- AGE Auto-gas Cabinet") {
       setDispenserPrice(19350);
-    } else if (event.target.value === "AGC01 Auto-gas") {
+    } else if (event.target.value === "- AGC01 Auto-gas Cabinet") {
       setDispenserPrice(22080);
-    } else if (event.target.value === "None") {
+    } else if (event.target.value === "- No Cabinet") {
       setDispenserPrice(0);
     }
+    setSelectedOptions({ ...selectedOptions, dispenser: event.target.value });
   };
 
   const handleTank = (event) => {
     setTank(event.target.value);
-    if (event.target.value === "No Tank") {
+    if (event.target.value === "- No Tank") {
       setTankPrice(-3510);
-    } else if (event.target.value === "500") {
+    } else if (event.target.value === "- 500 Gallon Tank") {
       setTankPrice(-691);
-    } else if (event.target.value === "1000") {
+    } else if (event.target.value === "- 1000 Gallon Tank") {
       setTankPrice(0);
-    } else if (event.target.value === "Customer Supplied Tank") {
+    } else if (event.target.value === "- Customer Supplied Tank") {
       setTankPrice(-2410);
-    } else if (event.target.value === "Vertical 1000") {
+    } else if (event.target.value === "- Vertical 1000 Gallon Tank") {
       setTankPrice(7240);
-    } else if (event.target.value === "1990") {
+    } else if (event.target.value === "- 1990 Gallon Tank") {
       setTankPrice(6230);
     }
+    setSelectedOptions({ ...selectedOptions, tank: event.target.value });
   };
 
   const handlePump = (event) => {
     setPump(event.target.value);
-    if (event.target.value === "Corken C10 2hp") {
+    if (event.target.value === "- Corken C10 2hp Pump") {
       setPumpPrice(0);
-    } else if (event.target.value === "Corken C12 2hp") {
+    } else if (event.target.value === "- Corken C12 2hp Pump") {
       setPumpPrice(750);
-    } else if (event.target.value === "Corken C16 3hp Single Phase") {
+    } else if (event.target.value === "- Corken C16 3hp Single Phase Pump") {
       setPumpPrice(2038);
-    } else if (event.target.value === "Corken C16 3hp Three Phase") {
+    } else if (event.target.value === "- Corken C16 3hp Three Phase Pump") {
       setPumpPrice(1084);
-    } else if (event.target.value === "Ebsray RC20 3hp Single Phase") {
+    } else if (event.target.value === "- Ebsray RC20 3hp Single Phase Pump") {
       setPumpPrice(3539);
     }
+    setSelectedOptions({ ...selectedOptions, pump: event.target.value });
   };
 
   const handleMeter = (event) => {
     setMeter(event.target.value);
-    if (event.target.value === "No Meter") {
+    if (event.target.value === "- No Meter") {
       setMeterPrice(-840);
-    } else if (event.target.value === "Non Temp Comp") {
+    } else if (event.target.value === "- Non Temp Comp Meter") {
       setMeterPrice(0);
-    } else if (event.target.value === "Temp Comp") {
+    } else if (event.target.value === "- Temp Comp Meter") {
       setMeterPrice(1084);
-    } else if (event.target.value === "Midcom MCR-09ISA") {
+    } else if (event.target.value === "- Midcom MCR-09ISA Meter") {
       setMeterPrice(4606);
     }
+    setSelectedOptions({ ...selectedOptions, meter: event.target.value });
   };
 
   const handlePower = (event) => {
     setPower(event.target.value);
-    if (event.target.value === "110V AC") {
+    if (event.target.value === "- Wired for 110V AC") {
       setPowerPrice(0);
-    } else if (event.target.value === "220V AC") {
+    } else if (event.target.value === "- Wired for 220V AC") {
       setPowerPrice(0);
-    } else if (event.target.value === "Skidded Off Grid Generator") {
+    } else if (event.target.value === "- Skidded Off Grid Generator") {
       setPowerPrice(8260);
     }
+    setSelectedOptions({ ...selectedOptions, power: event.target.value });
   };
 
   const handleEStop = (event) => {
     setEStop(event.target.value);
-    if (event.target.value === "Cable Pull Internal Shutdown") {
+    if (event.target.value === "- Cable Pull Emergency Shutdown") {
       setEStopPrice(0);
-    } else if (event.target.value === "Pneumatic Internal Shutdown") {
+    } else if (event.target.value === "- Pneumatic Emergency Shutdown") {
       setEStopPrice(950);
     } else if (
-      event.target.value === "Pneumatic and Electric Internal Shutdown"
+      event.target.value === "- Pneumatic and Electric Emergency Shutdown"
     ) {
       setEStopPrice(2000);
     }
+    setSelectedOptions({ ...selectedOptions, eStop: event.target.value });
   };
 
   const handleScale = (event) => {
     setScale(event.target.value);
-    if (event.target.value === "Customer Supplied Scale") {
+    if (event.target.value === "- Customer Supplied Scale") {
       setScalePrice(0);
-    } else if (event.target.value === "Manual Beam Scale") {
+    } else if (event.target.value === "- Manual Beam Scale") {
       setScalePrice(792);
-    } else if (event.target.value === "Fairbank E-Scale Filling System") {
+    } else if (event.target.value === "- Fairbank E-Scale Filling System") {
       setScalePrice(12600);
     }
+    setSelectedOptions({ ...selectedOptions, scale: event.target.value });
   };
 
   const handleShipping = (event) => {
     setShipping(event.target.value);
-    if (event.target.value === "Customer Pickup") {
+    if (event.target.value === "- Customer Pickup") {
       setShippingPrice(0);
-    } else if (event.target.value === "Nationwide Delivery") {
+    } else if (event.target.value === "- Nationwide Delivery") {
       setShippingPrice(950);
     }
+    setSelectedOptions({ ...selectedOptions, shipping: event.target.value });
   };
 
   const handlePurger = (event) => {
     setPurger(event.target.value);
-    if (event.target.value === "No Cylinder Purge System") {
+    if (event.target.value === "- No Cylinder Purge System") {
       setPurgerPrice(0);
-    } else if (event.target.value === "Cylinder Purge System") {
+    } else if (event.target.value === "- Cylinder Purge System") {
       setPurgerPrice(336.5);
     }
+    setSelectedOptions({ ...selectedOptions, purger: event.target.value });
   };
 
   const [EuroStylePrice, setEuroStylePrice] = React.useState(0);
@@ -396,8 +266,13 @@ export default function Main() {
     console.log([event.target.name], event.target.checked);
     if (event.target.name === "EuroStyle" && event.target.checked === true) {
       setEuroStylePrice(115.68);
+      setSelectedOptions({
+        ...selectedOptions,
+        euroStyle: "- Euro Style Staubli",
+      });
     } else {
       setEuroStylePrice(0);
+      setSelectedOptions({ ...selectedOptions, euroStyle: "" });
     }
   };
 
@@ -406,8 +281,10 @@ export default function Main() {
     console.log([event.target.name], event.target.checked);
     if (event.target.name === "Forklift" && event.target.checked === true) {
       setForkliftPrice(68.98);
+      setSelectedOptions({ ...selectedOptions, forklift: "- Forklift" });
     } else {
       setForkliftPrice(0);
+      setSelectedOptions({ ...selectedOptions, forklift: "" });
     }
   };
 
@@ -416,8 +293,10 @@ export default function Main() {
     console.log([event.target.name], event.target.checked);
     if (event.target.name === "Hanson" && event.target.checked === true) {
       setHansonPrice(15);
+      setSelectedOptions({ ...selectedOptions, hanson: "- Hanson" });
     } else {
       setHansonPrice(0);
+      setSelectedOptions({ ...selectedOptions, hanson: "" });
     }
   };
 
@@ -426,8 +305,10 @@ export default function Main() {
     console.log([event.target.name], event.target.checked);
     if (event.target.name === "POL" && event.target.checked === true) {
       setPOLPrice(61.97);
+      setSelectedOptions({ ...selectedOptions, pol: "- POL" });
     } else {
       setPOLPrice(0);
+      setSelectedOptions({ ...selectedOptions, pol: "" });
     }
   };
 
@@ -436,8 +317,10 @@ export default function Main() {
     console.log([event.target.name], event.target.checked);
     if (event.target.name === "RV" && event.target.checked === true) {
       setRVPrice(36.94);
+      setSelectedOptions({ ...selectedOptions, rv: "- RV" });
     } else {
       setRVPrice(0);
+      setSelectedOptions({ ...selectedOptions, rv: "" });
     }
   };
 
@@ -446,14 +329,20 @@ export default function Main() {
     console.log([event.target.name], event.target.checked);
     if (event.target.name === "HighCapacity" && event.target.checked === true) {
       setHighCapacityPrice(131.84);
+      setSelectedOptions({
+        ...selectedOptions,
+        highCapacity: "- High Capacity",
+      });
     } else {
       setHighCapacityPrice(0);
+      setSelectedOptions({ ...selectedOptions, highCapacity: "" });
     }
   };
 
   const { EuroStyle, Forklift, Hanson, POL, RV, HighCapacity } = adapters;
 
   const calculateTotal = () => {
+    console.log("calculateTotal Ran");
     setTotal(
       dispenserPrice +
         tankPrice +
@@ -471,8 +360,11 @@ export default function Main() {
         RVPrice +
         HighCapacityPrice
     );
-    // console.log("total", dispenserPrice + tankPrice);
   };
+
+  React.useEffect(() => {
+    calculateTotal();
+  });
 
   // const ref = React.createRef();
 
@@ -497,12 +389,18 @@ export default function Main() {
               value={dispenser}
               onChange={handleDispenser}
             >
-              <MenuItem value={"None"}>None</MenuItem>
-              <MenuItem value={"010 Dispenser"}>010 Dispenser</MenuItem>
-              <MenuItem value={"001 Dispenser"}>001 Dispenser</MenuItem>
-              <MenuItem value={"001 Auto-gas"}>001 Auto-gas</MenuItem>
-              <MenuItem value={"AGE Auto-gas"}>AGE Auto-gas</MenuItem>
-              <MenuItem value={"AGC01 Auto-gas"}>AGC01 Auto-gas</MenuItem>
+              <MenuItem value={"- No Cabinet"}>None</MenuItem>
+              <MenuItem value={"- 010 Dispenser Cabinet"}>
+                010 Dispenser
+              </MenuItem>
+              <MenuItem value={"- 001 Dispenser Cabinet"}>
+                001 Dispenser
+              </MenuItem>
+              <MenuItem value={"- 001 Auto-gas Cabinet"}>001 Auto-gas</MenuItem>
+              <MenuItem value={"- AGE Auto-gas Cabinet"}>AGE Auto-gas</MenuItem>
+              <MenuItem value={"- AGC01 Auto-gas Cabinet"}>
+                AGC01 Auto-gas
+              </MenuItem>
             </Select>
           </FormControl>
           <FormControl variant="filled" className={classes.formControl}>
@@ -513,14 +411,16 @@ export default function Main() {
               value={tank}
               onChange={handleTank}
             >
-              <MenuItem value={"No Tank"}>No Tank</MenuItem>
-              <MenuItem value={"Customer Supplied Tank"}>
-                Cusotomer Supplied Tank
+              <MenuItem value={"- No Tank"}>No Tank</MenuItem>
+              <MenuItem value={"- Customer Supplied Tank"}>
+                Customer Supplied Tank
               </MenuItem>
-              <MenuItem value={"500"}>500 Gallon</MenuItem>
-              <MenuItem value={"1000"}>1000 Gallon</MenuItem>
-              <MenuItem value={"Vertical 1000"}>Vertical 1000</MenuItem>
-              <MenuItem value={"1990"}>1990 Gallon</MenuItem>
+              <MenuItem value={"- 500 Gallon Tank"}>500 Gallon</MenuItem>
+              <MenuItem value={"- 1000 Gallon Tank"}>1000 Gallon</MenuItem>
+              <MenuItem value={"- Vertical 1000 Gallon Tank"}>
+                Vertical 1000
+              </MenuItem>
+              <MenuItem value={"- 1990 Gallon Tank"}>1990 Gallon</MenuItem>
             </Select>
           </FormControl>
           <FormControl variant="filled" className={classes.formControl}>
@@ -531,15 +431,19 @@ export default function Main() {
               value={pump}
               onChange={handlePump}
             >
-              <MenuItem value={"Corken C10 2hp"}>Corken C10 2hp</MenuItem>
-              <MenuItem value={"Corken C12 2hp"}>Corken C12 2hp</MenuItem>
-              <MenuItem value={"Corken C16 3hp Single Phase"}>
+              <MenuItem value={"- Corken C10 2hp Pump"}>
+                Corken C10 2hp
+              </MenuItem>
+              <MenuItem value={"- Corken C12 2hp Pump"}>
+                Corken C12 2hp
+              </MenuItem>
+              <MenuItem value={"- Corken C16 3hp Single Phase Pump"}>
                 Corken C16 3hp Single Phase
               </MenuItem>
-              <MenuItem value={"Corken C16 3hp Three Phase"}>
+              <MenuItem value={"- Corken C16 3hp Three Phase Pump"}>
                 Corken C16 3hp Three Phase
               </MenuItem>
-              <MenuItem value={"Ebsray RC20 3hp Single Phase"}>
+              <MenuItem value={"- Ebsray RC20 3hp Single Phase Pump"}>
                 Ebsray RC20 3hp Single Phase
               </MenuItem>
             </Select>
@@ -552,10 +456,12 @@ export default function Main() {
               value={meter}
               onChange={handleMeter}
             >
-              <MenuItem value={"No Meter"}>No Meter</MenuItem>
-              <MenuItem value={"Non Temp Comp"}>Non Temp Comp</MenuItem>
-              <MenuItem value={"Temp Comp"}>Temp Comp</MenuItem>
-              <MenuItem value={"Midcom MCR-09ISA"}>Midcom MCR-09ISA</MenuItem>
+              <MenuItem value={"- No Meter"}>No Meter</MenuItem>
+              <MenuItem value={"- Non Temp Comp Meter"}>Non Temp Comp</MenuItem>
+              <MenuItem value={"- Temp Comp Meter"}>Temp Comp</MenuItem>
+              <MenuItem value={"- Midcom MCR-09ISA Meter"}>
+                Midcom MCR-09ISA
+              </MenuItem>
             </Select>
           </FormControl>
           <FormControl variant="filled" className={classes.formControl}>
@@ -566,9 +472,9 @@ export default function Main() {
               value={power}
               onChange={handlePower}
             >
-              <MenuItem value={"110V AC"}>110V AC</MenuItem>
-              <MenuItem value={"220V AC"}>220V AC</MenuItem>
-              <MenuItem value={"Skidded Off Grid Generator"}>
+              <MenuItem value={"- Wired for 110V AC"}>110V AC</MenuItem>
+              <MenuItem value={"- Wired for 220V AC"}>220V AC</MenuItem>
+              <MenuItem value={"- Skidded Off Grid Generator"}>
                 Skidded Off Grid Generator
               </MenuItem>
             </Select>
@@ -581,13 +487,13 @@ export default function Main() {
               value={EStop}
               onChange={handleEStop}
             >
-              <MenuItem value={"Cable Pull Internal Shutdown"}>
+              <MenuItem value={"- Cable Pull Emergency Shutdown"}>
                 Cable Pull Internal Shutdown
               </MenuItem>
-              <MenuItem value={"Pneumatic Internal Shutdown"}>
+              <MenuItem value={"- Pneumatic Emergency Shutdown"}>
                 Pneumatic Internal Shutdown
               </MenuItem>
-              <MenuItem value={"Pneumatic and Electric Internal Shutdown"}>
+              <MenuItem value={"- Pneumatic and Electric Emergency Shutdown"}>
                 Pneumatic and Electric Internal Shutdown
               </MenuItem>
             </Select>
@@ -600,11 +506,13 @@ export default function Main() {
               value={Scale}
               onChange={handleScale}
             >
-              <MenuItem value={"Customer Supplied Scale"}>
+              <MenuItem value={"- Customer Supplied Scale"}>
                 Customer Supplied Scale
               </MenuItem>
-              <MenuItem value={"Manual Beam Scale"}>Manual Beam Scale</MenuItem>
-              <MenuItem value={"Fairbank E-Scale Filling System"}>
+              <MenuItem value={"- Manual Beam Scale"}>
+                Manual Beam Scale
+              </MenuItem>
+              <MenuItem value={"- Fairbank E-Scale Filling System"}>
                 Fairbank E-Scale Filling System
               </MenuItem>
             </Select>
@@ -619,8 +527,8 @@ export default function Main() {
               value={shipping}
               onChange={handleShipping}
             >
-              <MenuItem value={"Customer Pickup"}>Custom Pickup</MenuItem>
-              <MenuItem value={"Nationwide Delivery"}>
+              <MenuItem value={"- Customer Pickup"}>Custom Pickup</MenuItem>
+              <MenuItem value={"- Nationwide Delivery"}>
                 Nationwide Delivery
               </MenuItem>
             </Select>
@@ -633,10 +541,10 @@ export default function Main() {
               value={purger}
               onChange={handlePurger}
             >
-              <MenuItem value={"No Cylinder Purge System"}>
+              <MenuItem value={"- No Cylinder Purge System"}>
                 No Cylinder Purge System
               </MenuItem>
-              <MenuItem value={"Cylinder Purge System"}>
+              <MenuItem value={"- Cylinder Purge System"}>
                 Cylinder Purge System
               </MenuItem>
             </Select>
@@ -700,26 +608,21 @@ export default function Main() {
           </FormControl>
         </CardContent>
         <CardActions>
-          <Grid container spacing={3}>
-            <Grid item xs={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={calculateTotal}
-                size="small"
-              >
-                Calculate
-              </Button>
-            </Grid>
-            <Grid item xs={4}>
-              <div>Total: {formatter.format(total)}</div>
-            </Grid>
-          </Grid>
+          <Typography
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              marginLeft: 20,
+              color: "green",
+            }}
+          >
+            Total: {formatter.format(total)}
+          </Typography>
         </CardActions>
         <div style={{ margin: 8 }}>
-          <Typography style={{ fontSize: 20, margin: 20 }}>
-            To create a PDF enter Quote #, Comapny Name and Customer Name then
-            click GENERATE
+          <Typography style={{ fontSize: 16, margin: 20 }}>
+            To create a PDF enter Quote #, Comapny Name, Customer Name and Your
+            Name then click CREATE QUOTE PDF
           </Typography>
           <form className={classes.inputs} noValidate autoComplete="off">
             <Grid container spacing={2} direction="row" justify="center">
@@ -728,8 +631,13 @@ export default function Main() {
                   id="outlined-basic"
                   label="Quote #"
                   variant="outlined"
-                  onChange={(event) => setQuoteNumber(event.target.value)}
-                  defaultValue={quoteNumber}
+                  onChange={(event) =>
+                    setSelectedOptions({
+                      ...selectedOptions,
+                      quoteNum: event.target.value,
+                    })
+                  }
+                  // defaultValue={}
                 />
               </Grid>
               <Grid item xs={6} sm={3}>
@@ -737,6 +645,12 @@ export default function Main() {
                   id="outlined-basic"
                   label="Company Name"
                   variant="outlined"
+                  onChange={(event) =>
+                    setSelectedOptions({
+                      ...selectedOptions,
+                      companyName: event.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item xs={6} sm={3}>
@@ -744,6 +658,12 @@ export default function Main() {
                   id="outlined-basic"
                   label="Customer Name"
                   variant="outlined"
+                  onChange={(event) =>
+                    setSelectedOptions({
+                      ...selectedOptions,
+                      customerName: event.target.value,
+                    })
+                  }
                 />
               </Grid>{" "}
               <Grid item xs={6} sm={3}>
@@ -751,54 +671,23 @@ export default function Main() {
                   id="outlined-basic"
                   label="Your Name"
                   variant="outlined"
+                  onChange={(event) =>
+                    setSelectedOptions({
+                      ...selectedOptions,
+                      yourName: event.target.value,
+                    })
+                  }
                 />
               </Grid>
             </Grid>
           </form>
-          <Button
-            style={{ marginBottom: 10, marginTop: 30 }}
-            variant="contained"
-            color="secondary"
-            type="button"
-            onClick={handleOpen}
-          >
-            Generate
-          </Button>
-          <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            className={classes.modal}
-            open={open}
-            onClose={handleClose}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: 500,
-            }}
-          >
-            <Fade in={open}>
-              <div className={classes.paper}>
-                <h2 id="transition-modal-title">Dispenser Quote</h2>
-                <p id="transition-modal-description">
-                  If everything looks good you can download or print the quote.
-                  If not{" "}
-                  <button onClick={handleClose}>
-                    change the quote details
-                  </button>
-                </p>
-
-                <PDFViewer width={800} height={800}>
-                  <MyDocument />
-                </PDFViewer>
-              </div>
-            </Fade>
-          </Modal>
         </div>
+        <PdfModal
+          {...selectedOptions}
+          adapterState={[adapters]}
+          price={formatter.format(total)}
+        />
       </Card>
-      {/* <Card className={classes.card}>
-    
-        <CreateQuote />
-      </Card> */}
     </div>
   );
 }
