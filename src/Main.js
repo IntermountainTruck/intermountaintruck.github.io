@@ -2,7 +2,6 @@ import React from "react";
 import PdfModal from "./PdfModal";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import CardActions from "@material-ui/core/CardActions";
@@ -263,7 +262,6 @@ export default function Main() {
 
   const handleEuroStyle = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
-    console.log([event.target.name], event.target.checked);
     if (event.target.name === "EuroStyle" && event.target.checked === true) {
       setEuroStylePrice(115.68);
       setSelectedOptions({
@@ -278,7 +276,6 @@ export default function Main() {
 
   const handleForklift = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
-    console.log([event.target.name], event.target.checked);
     if (event.target.name === "Forklift" && event.target.checked === true) {
       setForkliftPrice(68.98);
       setSelectedOptions({ ...selectedOptions, forklift: "- Forklift" });
@@ -290,7 +287,6 @@ export default function Main() {
 
   const handleHanson = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
-    console.log([event.target.name], event.target.checked);
     if (event.target.name === "Hanson" && event.target.checked === true) {
       setHansonPrice(15);
       setSelectedOptions({ ...selectedOptions, hanson: "- Hanson" });
@@ -302,7 +298,6 @@ export default function Main() {
 
   const handlePOL = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
-    console.log([event.target.name], event.target.checked);
     if (event.target.name === "POL" && event.target.checked === true) {
       setPOLPrice(61.97);
       setSelectedOptions({ ...selectedOptions, pol: "- POL" });
@@ -314,7 +309,6 @@ export default function Main() {
 
   const handleRV = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
-    console.log([event.target.name], event.target.checked);
     if (event.target.name === "RV" && event.target.checked === true) {
       setRVPrice(36.94);
       setSelectedOptions({ ...selectedOptions, rv: "- RV" });
@@ -326,7 +320,6 @@ export default function Main() {
 
   const handleHighCapacity = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
-    console.log([event.target.name], event.target.checked);
     if (event.target.name === "HighCapacity" && event.target.checked === true) {
       setHighCapacityPrice(131.84);
       setSelectedOptions({
@@ -342,7 +335,6 @@ export default function Main() {
   const { EuroStyle, Forklift, Hanson, POL, RV, HighCapacity } = adapters;
 
   const calculateTotal = () => {
-    console.log("calculateTotal Ran");
     setTotal(
       dispenserPrice +
         tankPrice +

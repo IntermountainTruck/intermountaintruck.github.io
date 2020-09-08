@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PdfModal(props) {
   const classes = useStyles();
-  console.log("props", props);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
