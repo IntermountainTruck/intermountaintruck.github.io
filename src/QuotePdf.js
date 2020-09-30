@@ -67,7 +67,7 @@ export default function QuotePdf(props) {
             >
               Description
             </Text>
-            <Text>{props.dispenser}</Text>
+            <Text>{props.cabinet}</Text>
             <Text>{props.tank}</Text>
             <Text>{props.pump}</Text>
             <Text>{props.meter}</Text>
@@ -79,6 +79,7 @@ export default function QuotePdf(props) {
             <Text style={{ textDecoration: "underline", margin: 10 }}>
               Adapter(s)
             </Text>
+            <Text>{props.none}</Text>
             <Text>{props.euroStyle}</Text>
             <Text>{props.forklift}</Text>
             <Text>{props.hanson}</Text>

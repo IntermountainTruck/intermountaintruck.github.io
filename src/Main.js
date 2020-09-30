@@ -16,6 +16,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 
 import TextField from "@material-ui/core/TextField";
 
@@ -74,10 +75,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Main() {
   const classes = useStyles();
-  const [dispenser, setDispenser] = React.useState("");
-  const [dispenserPrice, setDispenserPrice] = React.useState(0);
+  const [cabinet, setCabinet] = React.useState("");
+  const [cabinetPrice, setCabinetPrice] = React.useState(0);
   const [selectedOptions, setSelectedOptions] = React.useState({
-    dispenser: "",
+    cabinet: "",
     tank: "",
     pump: "",
     meter: "",
@@ -90,6 +91,7 @@ export default function Main() {
     companyName: "",
     customerName: "",
     yourName: "",
+    none: "",
     euroStyle: "",
     forklift: "",
     hanson: "",
@@ -115,7 +117,11 @@ export default function Main() {
   const [purger, setPurger] = React.useState("");
   const [purgerPrice, setPurgerPrice] = React.useState(0);
   const [total, setTotal] = React.useState(0);
+  const [discount, setDiscount] = React.useState(0);
+  const [discountAmount, setDiscountAmount] = React.useState(0);
+  const [disableDiscount, setDisableDiscount] = React.useState(false);
   const [adapters, setAdapters] = React.useState({
+    None: false,
     EuroStyle: false,
     Forklift: false,
     Hanson: false,
@@ -129,22 +135,35 @@ export default function Main() {
     currency: "USD",
   });
 
-  const handleDispenser = (event) => {
-    setDispenser(event.target.value);
+  const addDiscount = () => {
+    console.log("discount percentage: ", discount, "total: ", total);
+    setDiscountAmount((discount / 100) * total);
+    setDisableDiscount(true);
+    console.log("discount total: ", total - discountAmount);
+    // setTotal(discountTotal);
+  };
+
+  const resetDiscount = () => {
+    setDiscountAmount(0);
+    setDisableDiscount(false);
+  };
+
+  const handleCabinet = (event) => {
+    setCabinet(event.target.value);
     if (event.target.value === "- 010 Dispenser Cabinet") {
-      setDispenserPrice(15100);
+      setCabinetPrice(15100);
     } else if (event.target.value === "- 001 Dispenser Cabinet") {
-      setDispenserPrice(14260);
+      setCabinetPrice(14260);
     } else if (event.target.value === "- 001 Auto-gas Cabinet") {
-      setDispenserPrice(15240);
+      setCabinetPrice(15240);
     } else if (event.target.value === "- AGE Auto-gas Cabinet") {
-      setDispenserPrice(19350);
+      setCabinetPrice(19350);
     } else if (event.target.value === "- AGC01 Auto-gas Cabinet") {
-      setDispenserPrice(22080);
+      setCabinetPrice(22080);
     } else if (event.target.value === "- No Cabinet") {
-      setDispenserPrice(0);
+      setCabinetPrice(0);
     }
-    setSelectedOptions({ ...selectedOptions, dispenser: event.target.value });
+    setSelectedOptions({ ...selectedOptions, cabinet: event.target.value });
   };
 
   const handleTank = (event) => {
@@ -260,6 +279,18 @@ export default function Main() {
   const [RVPrice, setRVPrice] = React.useState(0);
   const [HighCapacityPrice, setHighCapacityPrice] = React.useState(0);
 
+  const handleNone = (event) => {
+    setAdapters({ ...adapters, [event.target.name]: event.target.value });
+    if (event.target.name === "None" && event.target.checked === true) {
+      setSelectedOptions({
+        ...selectedOptions,
+        none: "- None",
+      });
+    } else {
+      setSelectedOptions({ ...selectedOptions, none: "" });
+    }
+  };
+
   const handleEuroStyle = (event) => {
     setAdapters({ ...adapters, [event.target.name]: event.target.checked });
     if (event.target.name === "EuroStyle" && event.target.checked === true) {
@@ -332,11 +363,11 @@ export default function Main() {
     }
   };
 
-  const { EuroStyle, Forklift, Hanson, POL, RV, HighCapacity } = adapters;
+  const { None, EuroStyle, Forklift, Hanson, POL, RV, HighCapacity } = adapters;
 
   const calculateTotal = () => {
     setTotal(
-      dispenserPrice +
+      cabinetPrice +
         tankPrice +
         pumpPrice +
         meterPrice +
@@ -350,7 +381,8 @@ export default function Main() {
         HansonPrice +
         POLPrice +
         RVPrice +
-        HighCapacityPrice
+        HighCapacityPrice -
+        discountAmount
     );
   };
 
@@ -373,25 +405,29 @@ export default function Main() {
         <CardContent>
           <FormControl variant="filled" className={classes.formControl}>
             <InputLabel id="demo-simple-select-filled-label">
-              Dispenser
+              Cabinet
             </InputLabel>
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={dispenser}
-              onChange={handleDispenser}
+              value={cabinet}
+              onChange={handleCabinet}
             >
               <MenuItem value={"- No Cabinet"}>None</MenuItem>
               <MenuItem value={"- 010 Dispenser Cabinet"}>
-                010 Dispenser
+                010 Dispenser Cabinet
               </MenuItem>
               <MenuItem value={"- 001 Dispenser Cabinet"}>
-                001 Dispenser
+                001 Dispenser Cabinet
               </MenuItem>
-              <MenuItem value={"- 001 Auto-gas Cabinet"}>001 Auto-gas</MenuItem>
-              <MenuItem value={"- AGE Auto-gas Cabinet"}>AGE Auto-gas</MenuItem>
+              <MenuItem value={"- 001 Auto-gas Cabinet"}>
+                001 Auto-gas Cabinet
+              </MenuItem>
+              <MenuItem value={"- AGE Auto-gas Cabinet"}>
+                AGE Auto-gas Cabinet
+              </MenuItem>
               <MenuItem value={"- AGC01 Auto-gas Cabinet"}>
-                AGC01 Auto-gas
+                AGC01 Auto-gas Cabinet
               </MenuItem>
             </Select>
           </FormControl>
@@ -546,6 +582,12 @@ export default function Main() {
             <FormGroup>
               <FormControlLabel
                 control={
+                  <Checkbox checked={None} onChange={handleNone} name="None" />
+                }
+                label="None"
+              />
+              <FormControlLabel
+                control={
                   <Checkbox
                     checked={EuroStyle}
                     onChange={handleEuroStyle}
@@ -600,16 +642,49 @@ export default function Main() {
           </FormControl>
         </CardContent>
         <CardActions>
-          <Typography
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              marginLeft: 20,
-              color: "green",
-            }}
-          >
-            Total: {formatter.format(total)}
-          </Typography>
+          <Grid container spacing={2} direction="column">
+            <Grid item xs={6}>
+              <Typography
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  marginLeft: 20,
+                  color: "green",
+                }}
+              >
+                Total: {formatter.format(total)}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <TextField
+                id="outlined-basic"
+                label="Discount %"
+                variant="outlined"
+                onChange={(event) => setDiscount(event.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                disabled={disableDiscount}
+                onClick={() => addDiscount()}
+              >
+                Add Discount
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                size="small"
+                variant="contained"
+                color="secondary"
+                onClick={() => resetDiscount()}
+              >
+                Reset
+              </Button>
+            </Grid>
+          </Grid>
         </CardActions>
         <div style={{ margin: 8 }}>
           <Typography style={{ fontSize: 16, margin: 20 }}>
