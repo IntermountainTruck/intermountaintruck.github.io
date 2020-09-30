@@ -673,9 +673,9 @@ export default function Main() {
               >
                 Add Discount
               </Button>
-            </Grid>
-            <Grid item>
+
               <Button
+                style={{ marginLeft: 10 }}
                 size="small"
                 variant="contained"
                 color="secondary"
