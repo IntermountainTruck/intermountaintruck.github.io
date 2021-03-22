@@ -87,6 +87,7 @@ export default function Main() {
     scale: "",
     shipping: "",
     purger: "",
+    plumbingKit: "",
     quoteNum: "",
     companyName: "",
     customerName: "",
@@ -116,6 +117,8 @@ export default function Main() {
   const [shippingPrice, setShippingPrice] = React.useState(0);
   const [purger, setPurger] = React.useState("");
   const [purgerPrice, setPurgerPrice] = React.useState(0);
+  const [plumbingKit, setPlumbingKit] = React.useState("");
+  const [plumbingKitPrice, setPlumbingKitPrice] = React.useState(0);
   const [total, setTotal] = React.useState(0);
   const [discount, setDiscount] = React.useState(0);
   const [discountAmount, setDiscountAmount] = React.useState(0);
@@ -140,7 +143,6 @@ export default function Main() {
     setDiscountAmount((discount / 100) * total);
     setDisableDiscount(true);
     console.log("discount total: ", total - discountAmount);
-    // setTotal(discountTotal);
   };
 
   const resetDiscount = () => {
@@ -271,6 +273,16 @@ export default function Main() {
     }
     setSelectedOptions({ ...selectedOptions, purger: event.target.value });
   };
+  
+  const handlePlumbingKit = (event) => {
+    setPlumbingKit(event.target.value);
+    if (event.target.value === "- No Plumbing Kit") {
+      setPlumbingKitPrice(0);
+    } else if (event.target.value === "- Plumbing Kit") {
+      setPlumbingKitPrice(900);
+    }
+    setSelectedOptions({ ...selectedOptions, plumbingKit: event.target.value });
+  };
 
   const [EuroStylePrice, setEuroStylePrice] = React.useState(0);
   const [ForkliftPrice, setForkliftPrice] = React.useState(0);
@@ -376,6 +388,7 @@ export default function Main() {
         scalePrice +
         shippingPrice +
         purgerPrice +
+        plumbingKitPrice +
         EuroStylePrice +
         ForkliftPrice +
         HansonPrice +
@@ -574,6 +587,22 @@ export default function Main() {
               </MenuItem>
               <MenuItem value={"- Cylinder Purge System"}>
                 Cylinder Purge System
+              </MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" className={classes.formControl}>
+            <InputLabel id="demo-simple-select-filled-label">Plumbing Kit</InputLabel>
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              value={plumbingKit}
+              onChange={handlePlumbingKit}
+            >
+              <MenuItem value={"- No Plumbing Kit"}>
+                No Plumbing Kit 
+              </MenuItem>
+              <MenuItem value={"- Plumbing Kit"}>
+               Plumbing Kit 
               </MenuItem>
             </Select>
           </FormControl>

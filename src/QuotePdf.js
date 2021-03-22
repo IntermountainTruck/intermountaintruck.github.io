@@ -76,6 +76,7 @@ export default function QuotePdf(props) {
             <Text>{props.scale}</Text>
             <Text>{props.shipping}</Text>
             <Text>{props.purger}</Text>
+            <Text>{props.plumbingKit}</Text>
             <Text style={{ textDecoration: "underline", margin: 10 }}>
               Adapter(s)
             </Text>
@@ -99,8 +100,8 @@ export default function QuotePdf(props) {
             </Text>
             <Text style={{ maxWidth: "60vw", fontSize: 12 }}>
               This bid does not include any taxes, licenses, permits or
-              electrical. All work guaranteed to be installed to NFPA 58 2017
-              Warranty parts and labor for 12 months
+              electrical. All work guaranteed to be installed to NFPA 58 2017.
+              Warranty parts for 12 months.
             </Text>
             <View
               style={{
