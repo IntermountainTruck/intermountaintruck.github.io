@@ -171,17 +171,17 @@ export default function Main() {
   const handleTank = (event) => {
     setTank(event.target.value);
     if (event.target.value === "- No Tank") {
-      setTankPrice(-3510);
+      setTankPrice(-3114);
     } else if (event.target.value === "- 500 Gallon Tank") {
-      setTankPrice(-691);
+      setTankPrice(-295);
     } else if (event.target.value === "- 1000 Gallon Tank") {
-      setTankPrice(0);
+      setTankPrice(396);
     } else if (event.target.value === "- Customer Supplied Tank") {
-      setTankPrice(-2410);
+      setTankPrice(-2014);
     } else if (event.target.value === "- Vertical 1000 Gallon Tank") {
-      setTankPrice(7240);
+      setTankPrice(7636);
     } else if (event.target.value === "- 1990 Gallon Tank") {
-      setTankPrice(6230);
+      setTankPrice(6716);
     }
     setSelectedOptions({ ...selectedOptions, tank: event.target.value });
   };
@@ -273,7 +273,7 @@ export default function Main() {
     }
     setSelectedOptions({ ...selectedOptions, purger: event.target.value });
   };
-  
+
   const handlePlumbingKit = (event) => {
     setPlumbingKit(event.target.value);
     if (event.target.value === "- No Plumbing Kit") {
@@ -591,19 +591,17 @@ export default function Main() {
             </Select>
           </FormControl>
           <FormControl variant="filled" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-filled-label">Plumbing Kit</InputLabel>
+            <InputLabel id="demo-simple-select-filled-label">
+              Plumbing Kit
+            </InputLabel>
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
               value={plumbingKit}
               onChange={handlePlumbingKit}
             >
-              <MenuItem value={"- No Plumbing Kit"}>
-                No Plumbing Kit 
-              </MenuItem>
-              <MenuItem value={"- Plumbing Kit"}>
-               Plumbing Kit 
-              </MenuItem>
+              <MenuItem value={"- No Plumbing Kit"}>No Plumbing Kit</MenuItem>
+              <MenuItem value={"- Plumbing Kit"}>Plumbing Kit</MenuItem>
             </Select>
           </FormControl>
           <br />
